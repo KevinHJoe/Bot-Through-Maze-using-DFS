@@ -1,0 +1,34 @@
+class Coordinate{
+  Integer x = 0;
+  Integer y = 0;
+
+  public int getX(){
+    return x;
+  }
+  public int getY(){
+    return y;
+  }
+
+  public boolean isEmpty(){
+    return false;
+  }
+  
+  public void setCoord(int i, int j){
+    x = i;
+    y = j;
+  }
+  @Override
+  public boolean equals(Object obj) {
+
+    if(obj == null){
+      return false;
+    }
+    if(obj instanceof Coordinate){
+      Coordinate test = (Coordinate) obj;
+      if(test.x == this.x && test.y == this.y){
+        return true;
+      }
+    }
+    return (this == obj);
+  }
+}
