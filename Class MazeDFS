@@ -1,0 +1,175 @@
+import java.util.Stack;
+import java.lang.Comparable;
+import java.util.*;
+
+class Main {
+
+  public static int[][] maze = { 
+    {9,9,9,9,9,9,9,9,9,9,9,9},
+    {9,1,1,1,1,1,1,1,1,1,1,9},
+    {9,1,0,1,0,1,1,0,0,0,5,9},
+    {9,1,0,0,0,0,0,1,0,1,1,9},
+    {9,1,1,0,1,1,0,1,0,0,1,9},
+    {9,1,0,0,1,0,0,0,0,0,1,9},
+    {9,1,1,0,1,1,1,1,1,0,1,9},
+    {9,1,0,0,1,0,0,0,1,0,1,9},
+    {9,1,1,0,1,0,1,0,1,1,1,9},
+    {9,1,0,0,0,0,1,0,0,0,3,9},
+    {9,1,1,1,1,1,1,1,1,1,1,9},
+    {9,9,9,9,9,9,9,9,9,9,9,9}
+    };
+
+    public static Deque<Coordinate> deadEnd = new ArrayDeque<Coordinate>(10);
+    public static Deque<Coordinate> deq = new ArrayDeque<Coordinate>(10);
+
+
+  public static void main(String[] args) {
+
+
+    printMaze(maze);
+    dfs(2,10);
+
+  }
+
+  public static boolean isDeadEnd(Coordinate coord){
+    Iterator it = deadEnd.iterator();
+    while(it.hasNext()){
+      if(it.next().equals(coord)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static Coordinate setCoord(int i, int j){
+    Coordinate coord = new Coordinate();
+    coord.setCoord(i,j);
+    return coord;
+  }
+
+  public static boolean checkCoord(Coordinate coord){
+    return iterateCoord(coord);
+  }
+
+  private static boolean iterateCoord(Coordinate coord){
+    Iterator it = deq.iterator();
+    while(it.hasNext()){
+      if(it.next().equals(coord)){
+        return true; 
+      }
+    }
+    return false;
+  }
+
+  public static int dfs(int i, int j){
+  
+    if(i == 9 && j == 9){
+      maze[9][10] =4;
+      printMaze(maze);
+      System.out.println("You're Free!");
+      setOptimumRoute(deq);
+      return 0;
+    }
+    Coordinate coord = new Coordinate();
+
+  if(!isDeadEnd(coord)){           
+  
+      if(maze[i+1][j] == 0 || maze[i+1][j] == 3){
+         coord = setCoord(i+1, j);
+         deq.push(coord);
+         maze[i+1][j] = 4;
+         printMaze(maze);
+         return dfs(i+1,j);
+      }
+      else if(maze[i-1][j] == 0){
+         coord = setCoord((i-1),j);
+         deq.push(coord);
+         maze[i-1][j] = 4;
+         printMaze(maze);
+         return dfs(i-1,j);
+      }
+      else if(maze[i][j+1] == 0){
+         coord = setCoord(i,(j+1));
+         deq.push(coord);
+         maze[i][j+1] = 4;
+         printMaze(maze);
+         return dfs(i,j+1);
+      }
+      else if(maze[i][j-1] == 0){
+         coord = setCoord(i,(j-1));
+         deq.push(coord);
+         maze[i][j-1] = 4;
+         printMaze(maze);
+         return dfs(i,j-1);
+      }
+  }
+  
+    eraseDeadEndPrint(deq);
+    
+    deadEnd.push(deq.pop());
+    int n = deq.peek().getX();
+    int m = deq.peek().getY();
+    printMaze(maze);
+    return dfs(n,m);
+  }
+
+  public static void printMaze(int[][] m) {
+    
+
+    for(int i = 0; i < 12; i++){
+      for(int j = 0; j < 12; j++){
+        if(m[i][j]==1){
+         System.out.print(" X ");   //wall
+        }
+        if(m[i][j]==0){             //empty
+          System.out.print("   ");
+        }
+        if(m[i][j]==-1){            //dead end
+          System.out.print("   ");
+        }
+        if(m[i][j]==3){             //entrance
+          System.out.print(" E ");
+        }
+        if(m[i][j]==4){             //bot
+          System.out.print(" B ");
+        }
+        if(m[i][j]==5){             //exit
+          System.out.print(" B ");
+          m[i][j] = 1;
+        }
+      }
+      System.out.println();
+    }
+    try{
+      Thread.sleep(1200);
+    }catch(Exception e){}
+    System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+  }
+  
+  public static void eraseDeadEndPrint(Deque<Coordinate> deq){
+    int n = deq.peek().getX(); 
+    int m = deq.peek().getY();
+    if(maze[n][m] == 4){
+      maze[n][m] = -1;
+    }
+  }
+
+  public static void setOptimumRoute(Deque<Coordinate> deq){
+      try{
+          System.out.println("Running Optimum Route\n\n\n");
+          Thread.sleep(3000);
+        }catch(Exception e){
+        }
+        
+        System.out.println("Optimum Coordinates:");
+        
+        while(!deq.isEmpty()){
+          int n = deq.peek().getX();
+          int m = deq.peek().getY();
+          System.out.println(n + " " + m);
+          deq.pop();
+        }
+  }
+
+}
+
